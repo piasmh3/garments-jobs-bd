@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b2a5b">
+<title>Garments Jobs BD</title>
+<style>
+:root{--blue:#0b2a5b;--blue2:#1769e0;--bg:#f4f7fb;--card:#fff;--text:#142033;--muted:#718096;--line:#e5eaf1;--green:#18a558}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Noto Sans Bengali",sans-serif;background:var(--bg);color:var(--text)}
+.app{max-width:520px;margin:auto;min-height:100vh;background:var(--bg);padding-bottom:82px}
+header{background:linear-gradient(135deg,#09234d,#1769e0);color:#fff;padding:28px 18px 22px;border-radius:0 0 24px 24px}
+.brand{font-size:24px;font-weight:800}.tag{opacity:.85;font-size:13px;margin-top:3px}
+.search{margin-top:18px;background:#fff;border-radius:14px;padding:13px 14px;display:flex;gap:10px;align-items:center;color:#667}
+.search input{border:0;outline:0;width:100%;font-size:15px}
+.section{padding:18px}.row{display:flex;justify-content:space-between;align-items:center}.title{font-size:18px;font-weight:800}.link{color:var(--blue2);font-size:13px}
+.filters{display:flex;gap:9px;overflow:auto;margin-top:12px}.chip{background:#fff;border:1px solid var(--line);padding:9px 13px;border-radius:20px;white-space:nowrap;font-size:13px}
+.job{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;margin-top:11px;box-shadow:0 4px 14px #163b6b0a}
+.jobtop{display:flex;gap:12px}.logo{width:44px;height:44px;border-radius:12px;background:#e9f1ff;color:var(--blue2);display:grid;place-items:center;font-weight:800}
+.job h3{margin:0;font-size:16px}.company{font-size:13px;color:var(--muted);margin-top:3px}.meta{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:#566273;margin-top:11px}.salary{color:var(--green);font-weight:700}.btn{border:0;border-radius:11px;padding:11px 15px;font-weight:700;cursor:pointer}.primary{background:var(--blue2);color:white}.save{background:#eef4ff;color:var(--blue2)}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:9px 5px calc(9px + env(safe-area-inset-bottom));z-index:5}
+.nav{border:0;background:none;color:#7b8797;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:3px}.nav.active{color:var(--blue2);font-weight:800}
+.page{display:none}.page.active{display:block}.empty{padding:45px 20px;text-align:center;color:var(--muted)}
+.detail{padding:18px}.back{border:0;background:none;font-size:15px;color:var(--blue2);padding:5px 0 18px}.hero{background:#fff;border-radius:18px;padding:20px;border:1px solid var(--line)}.hero h1{font-size:22px;margin:12px 0 5px}.biglogo{width:58px;height:58px;border-radius:16px;background:#e9f1ff;color:var(--blue2);display:grid;place-items:center;font-size:20px;font-weight:800}.box{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px}.box h3{margin:0 0 10px}.apply{width:100%;margin-top:14px;font-size:16px}
+.profile{padding:20px}.avatar{width:72px;height:72px;border-radius:50%;background:#dceaff;color:var(--blue2);display:grid;place-items:center;font-size:26px;font-weight:800;margin-bottom:12px}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#152238;color:#fff;padding:11px 15px;border-radius:12px;font-size:13px;display:none;z-index:10}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">🏭 Garments Jobs BD</div>
+  <div class="tag">গার্মেন্টস চাকরি খুঁজুন, ক্যারিয়ার গড়ুন</div>
+  <div class="search">🔎 <input id="q" placeholder="পদ, কোম্পানি বা এলাকা লিখুন" oninput="renderJobs()"></div>
+</header>
+
+<main>
+<section id="home" class="page active">
+  <div class="section">
+    <div class="row"><div class="title">ক্যাটাগরি</div><div class="link">সব দেখুন</div></div>
+    <div class="filters">
+      <button class="chip" onclick="setQ('অপারেটর')">অপারেটর</button>
+      <button class="chip" onclick="setQ('QC')">QC</button>
+      <button class="chip" onclick="setQ('IE')">IE</button>
+      <button class="chip" onclick="setQ('হেলপার')">হেলপার</button>
+      <button class="chip" onclick="setQ('সিকিউরিটি')">সিকিউরিটি</button>
+    </div>
+  </div>
+  <div class="section" style="padding-top:0">
+    <div class="row"><div class="title">সাম্প্রতিক চাকরি</div><div class="link" onclick="showPage('search')">সব দেখুন</div></div>
+    <div id="jobs"></div>
+  </div>
+</section>
+
+<section id="search" class="page">
+  <div class="section">
+    <div class="title">চাকরি খুঁজুন</div>
+    <div class="filters">
+      <button class="chip" onclick="setQ('গাজীপুর')">📍 গাজীপুর</button>
+      <button class="chip" onclick="setQ('ঢাকা')">📍 ঢাকা</button>
+      <button class="chip" onclick="setQ('নারায়ণগঞ্জ')">📍 নারায়ণগঞ্জ</button>
+      <button class="chip" onclick="setQ('নারী')">👩 নারী</button>
+    </div>
+    <div id="searchJobs"></div>
+  </div>
+</section>
+
+<section id="saved" class="page"><div class="section"><div class="title">❤️ Saved Jobs</div><div id="savedJobs"></div></div></section>
+<section id="notifications" class="page"><div class="section"><div class="title">🔔 Notifications</div><div class="box">নতুন চাকরির আপডেট এখানে দেখা যাবে।</div><div class="box">আপনার পছন্দের এলাকার নতুন চাকরি এলে নোটিফিকেশন পাবেন।</div></div></section>
+<section id="profile" class="page"><div class="profile"><div class="avatar">P</div><h2>আমার প্রোফাইল</h2><p style="color:var(--muted)">চাকরি খুঁজতে আপনার তথ্য সংরক্ষণ করুন।</p><div class="box">📱 মোবাইল নম্বর<br><br>📍 পছন্দের এলাকা<br><br>💼 পছন্দের পদ</div></div></section>
+
+<section id="detail" class="page"><div class="detail">
+<button class="back" onclick="showPage('home')">← ফিরে যান</button>
+<div id="detailContent"></div>
+</div></section>
+</main>
+
+<nav class="bottom">
+<button class="nav active" onclick="showPage('home',this)">🏠<span>হোম</span></button>
+<button class="nav" onclick="showPage('search',this)">🔎<span>খুঁজুন</span></button>
+<button class="nav" onclick="showPage('saved',this)">❤️<span>Saved</span></button>
+<button class="nav" onclick="showPage('notifications',this)">🔔<span>নোটিফাই</span></button>
+<button class="nav" onclick="showPage('profile',this)">👤<span>প্রোফাইল</span></button>
+</nav>
+<div id="toast" class="toast"></div>
+</div>
+<script>
+const jobs=[
+{id:1,title:"সুইং মেশিন অপারেটর",company:"ABC Garments Ltd.",loc:"গাজীপুর",salary:"৳12,000–16,000",exp:"১–২ বছর",type:"অপারেটর"},
+{id:2,title:"Quality Control (QC)",company:"Fashion Knitwear Ltd.",loc:"নারায়ণগঞ্জ",salary:"৳15,000–20,000",exp:"২ বছর",type:"QC"},
+{id:3,title:"Helper",company:"Modern Apparel Ltd.",loc:"ঢাকা",salary:"৳10,000–13,000",exp:"অভিজ্ঞতা না থাকলেও চলবে",type:"হেলপার"},
+{id:4,title:"IE Officer",company:"Star Fashion BD",loc:"গাজীপুর",salary:"৳20,000–28,000",exp:"২–৩ বছর",type:"IE"},
+{id:5,title:"Security Guard",company:"Green Garments Ltd.",loc:"সাভার",salary:"৳12,000–15,000",exp:"১ বছর",type:"সিকিউরিটি"}
+];
+let saved=JSON.parse(localStorage.getItem('savedJobs')||'[]');
+function card(j){return `<div class="job"><div class="jobtop"><div class="logo">${j.company[0]}</div><div style="flex:1"><h3>${j.title}</h3><div class="company">${j.company}</div></div></div><div class="meta"><span>📍 ${j.loc}</span><span class="salary">💰 ${j.salary}</span><span>💼 ${j.exp}</span></div><div style="display:flex;gap:8px;margin-top:13px"><button class="btn primary" onclick="detail(${j.id})">বিস্তারিত</button><button class="btn save" onclick="toggleSave(${j.id})">${saved.includes(j.id)?'❤️ Saved':'♡ Save'}</button></div></div>`}
+function renderJobs(){let q=(document.getElementById('q').value||'').toLowerCase();let a=jobs.filter(j=>(j.title+j.company+j.loc+j.type).toLowerCase().includes(q));document.getElementById('jobs').innerHTML=a.map(card).join('')||'<div class="empty">কোনো চাকরি পাওয়া যায়নি।</div>';document.getElementById('searchJobs').innerHTML=a.map(card).join('')||'<div class="empty">কোনো চাকরি পাওয়া যায়নি।</div>'}
+function setQ(x){document.getElementById('q').value=x;showPage('search');renderJobs()}
+function detail(id){let j=jobs.find(x=>x.id===id);document.getElementById('detailContent').innerHTML=`<div class="hero"><div class="biglogo">${j.company[0]}</div><h1>${j.title}</h1><div class="company">${j.company}</div><div class="meta"><span>📍 ${j.loc}</span><span class="salary">💰 ${j.salary}</span></div><button class="btn primary apply" onclick="toast('আবেদন প্রক্রিয়া শিগগিরই চালু হবে')">Apply Now</button></div><div class="box"><h3>চাকরির তথ্য</h3><p><b>পদ:</b> ${j.title}</p><p><b>অভিজ্ঞতা:</b> ${j.exp}</p><p><b>কর্মস্থল:</b> ${j.loc}</p><p><b>বেতন:</b> ${j.salary}</p></div><div class="box"><h3>যোগ্যতা ও দায়িত্ব</h3><p>কাজের প্রয়োজনীয় যোগ্যতা, দায়িত্ব এবং আবেদন পদ্ধতি এখানে দেখানো হবে।</p></div>`;showPage('detail')}
+function toggleSave(id){saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];localStorage.setItem('savedJobs',JSON.stringify(saved));renderJobs();renderSaved();toast(saved.includes(id)?'চাকরি Saved হয়েছে':'Saved থেকে সরানো হয়েছে')}
+function renderSaved(){let a=jobs.filter(j=>saved.includes(j.id));document.getElementById('savedJobs').innerHTML=a.length?a.map(card).join(''):'<div class="empty">আপনি এখনো কোনো চাকরি Save করেননি।</div>'}
+function showPage(id,el){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');if(el){document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));el.classList.add('active')}if(id==='saved')renderSaved();window.scrollTo(0,0)}
+function toast(t){let x=document.getElementById('toast');x.textContent=t;x.style.display='block';setTimeout(()=>x.style.display='none',1800)}
+renderJobs();renderSaved();
+</script>
+</body>
+</html>
